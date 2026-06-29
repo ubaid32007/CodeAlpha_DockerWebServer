@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  webserver:
+    # Build image from our Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Name the container
+    container_name: codealpha-webserver
+
+    # Map host port 8080 → container port 80
+    # Access at: http://localhost:8080
+    ports:
+      - "8080:80"
+
+    # Auto-restart if container crashes
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+    # Mount HTML folder — edit files without rebuilding
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+
+    # Custom network
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodeAlpha Docker Web Server</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #050510;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      border-bottom: 1px solid #ffffff0f;
+      background: #050510ee;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .nav-logo span { color: #2196f3; }
+    .nav-badge {
+      background: #2196f318;
+      border: 1px solid #2196f344;
+      color: #2196f3;
+      font-size: 12px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #2196f312;
+      border: 1px solid #2196f330;
+      color: #64b5f6;
+      font-size: 13px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #4caf50;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    h1 span { color: #2196f3; }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    /* ── Stats Cards ── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+      padding: 0 20px;
+    }
+    .stat-card {
+      background: #0d0d1f;
+      border: 1px solid #1a1a35;
+      border-radius: 14px;
+      padding: 24px 32px;
+      min-width: 140px;
+      text-align: center;
+      transition: border-color 0.25s, transform 0.2s;
+    }
+    .stat-card:hover {
+      border-color: #2196f344;
+      transform: translateY(-3px);
+    }
+    .stat-icon { font-size: 1.8rem; margin-bottom: 10px; }
+    .stat-label {
+      font-size: 11px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .stat-value.green { color: #4caf50; }
+
+    /* ── Features ── */
+    .section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature {
+      background: #0d0d1f;
+      border: 1px solid #1a1a35;
+      border-radius: 14px;
+      padding: 28px;
+      transition: border-color 0.25s;
+    }
+    .feature:hover { border-color: #2196f344; }
+    .feature-icon {
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+    .feature h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .feature p {
+      font-size: 0.875rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* ── Commands ── */
+    .commands {
+      background: #0d0d1f;
+      border: 1px solid #1a1a35;
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 80px;
+    }
+    .cmd-title {
+      font-size: 0.8rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+    .cmd {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #1a1a35;
+    }
+    .cmd:last-child { border-bottom: none; }
+    .cmd-prompt { color: #2196f3; font-family: monospace; font-size: 0.9rem; }
+    .cmd-text { color: #e0e0e0; font-family: monospace; font-size: 0.9rem; }
+    .cmd-desc { color: #555; font-size: 0.8rem; margin-left: auto; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 32px;
+      border-top: 1px solid #ffffff08;
+      color: #444;
+      font-size: 0.85rem;
+    }
+    footer span { color: #2196f3; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Code<span>Alpha</span></div>
+    <div class="nav-badge">🐳 Docker Container</div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-tag">
+      <div class="dot"></div>
+      Container is Live
+    </div>
+    <h1>Web Server Running<br>Inside <span>Docker</span></h1>
+    <p class="subtitle">
+      This page is served by an Nginx web server running inside a Docker container.
+      Part of the CodeAlpha DevOps Internship — Task 4.
+    </p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-icon">🐳</div>
+      <div class="stat-label">Platform</div>
+      <div class="stat-value">Docker</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-label">Web Server</div>
+      <div class="stat-value">Nginx</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🌐</div>
+      <div class="stat-label">Port</div>
+      <div class="stat-value">8080 → 80</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-label">Health</div>
+      <div class="stat-value green">Healthy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏔️</div>
+      <div class="stat-label">Base Image</div>
+      <div class="stat-value">Alpine</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">What This Project Demonstrates</div>
+    <div class="section-sub">Core Docker & DevOps concepts covered in Task 4</div>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">📦</div>
+        <h3>Containerization</h3>
+        <p>The web server is packaged into a Docker container using a Dockerfile with an Nginx Alpine base image.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔄</div>
+        <h3>Container Lifecycle</h3>
+        <p>Manage containers with build, run, stop, and remove commands. Docker Compose handles orchestration.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💓</div>
+        <h3>Health Monitoring</h3>
+        <p>Built-in HEALTHCHECK in the Dockerfile pings the server every 30 seconds to verify it's responding.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔁</div>
+        <h3>Auto Restart</h3>
+        <p>Configured with <code style="color:#2196f3">restart: unless-stopped</code> so the container recovers automatically from failures.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🗂️</div>
+        <h3>Volume Mounting</h3>
+        <p>HTML files are mounted as a volume so changes reflect instantly without rebuilding the image.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🌉</div>
+        <h3>Bridge Networking</h3>
+        <p>Container runs on a custom Docker bridge network, isolating it while exposing port 8080 to the host.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Docker Commands Used</div>
+    <div class="section-sub">Key commands to build, run and manage this container</div>
+    <div class="commands">
+      <div class="cmd-title">Terminal Commands</div>
+      <div class="cmd">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">docker-compose up --build</span>
+        <span class="cmd-desc">Build image & start container</span>
+      </div>
+      <div class="cmd">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">docker ps</span>
+        <span class="cmd-desc">List running containers</span>
+      </div>
+      <div class="cmd">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">docker logs codealpha-webserver</span>
+        <span class="cmd-desc">View container logs</span>
+      </div>
+      <div class="cmd">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">docker inspect codealpha-webserver</span>
+        <span class="cmd-desc">Inspect container details</span>
+      </div>
+      <div class="cmd">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">docker exec -it codealpha-webserver sh</span>
+        <span class="cmd-desc">Enter container shell</span>
+      </div>
+      <div class="cmd">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">docker-compose down</span>
+        <span class="cmd-desc">Stop & remove container</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    CodeAlpha DevOps Internship &nbsp;|&nbsp; <span>Task 4: Web Server using Docker</span> &nbsp;|&nbsp; Nginx + Docker
+  </footer>
+
+</body>
+</html>
